@@ -12,8 +12,8 @@ app.config = {
 }
 
 //create file
-data.create('test','newFile',{'name':'Bangladesh','language':'Bangla','currency':'Tk'},(err)=>{
-    console.log(err)
+data.read('test','newFile',(err,data)=>{
+    console.log(err,data)
 })
 
 
