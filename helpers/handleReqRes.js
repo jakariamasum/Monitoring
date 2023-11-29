@@ -29,7 +29,7 @@ handler.handleReqRes = (req, res) => {
     const decoder = new StringDecoder('utf-8');
     let realData = '';
 
-    console.log(routes[trimmedPath])
+    // console.log(routes[trimmedPath])
     const chosenHandler = routes[trimmedPath] ? routes[trimmedPath] : notFoundHandler;
 
     req.on('data', (buffer) => {

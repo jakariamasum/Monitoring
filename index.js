@@ -12,9 +12,9 @@ app.config = {
 }
 
 //create file
-data.read('test','newFile',(err,data)=>{
-    console.log(err,data)
-})
+// data.read('test','newFile',(err,data)=>{
+//     console.log(err,data)
+// })
 
 
 //create server
