@@ -1,5 +1,5 @@
 const data=require('../lib/data')
-const {hash}= require('../helpers/utilities')
+const {parseJSON,hash}= require('../helpers/utilities')
 const handler = {};
 
 handler.userHandler = (requestProperties, callback) => {
@@ -14,7 +14,29 @@ handler.userHandler = (requestProperties, callback) => {
 
 handler._user = {};
 handler._user.get = (requestProperties, callback) => {
-    callback(200)
+    const phone =
+        typeof requestProperties.queryStringObject.phone === 'string' &&
+        requestProperties.queryStringObject.phone.trim().length === 11
+            ? requestProperties.queryStringObject.phone
+            : false;
+    if (phone) {
+        // lookup the user
+        data.read('users', phone, (err, u) => {
+            const user = { ...parseJSON(u) };
+            if (!err && user) {
+                delete user.password;
+                callback(200, user);
+            } else {
+                callback(404, {
+                    error: 'Requested user was not found!',
+                });
+            }
+        });
+    } else {
+        callback(404, {
+            error: 'Requested user was not found!',
+        });
+    }
 };
 handler._user.post = (requestProperties, callback) => {
     const firstName =
