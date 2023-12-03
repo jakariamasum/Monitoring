@@ -3,6 +3,7 @@ const url = require('url');
 const { StringDecoder } = require('string_decoder');
 const routes = require('../route');
 const { notFoundHandler } = require('../handlers/notFoundHandler');
+const { parseJSON,hash}=require('../helpers/utilities')
 
 // modue scaffolding
 const handler = {};
@@ -38,6 +39,8 @@ handler.handleReqRes = (req, res) => {
 
     req.on('end', () => {
         realData += decoder.end();
+
+        requestProperties.body= parseJSON(realData);
 
         chosenHandler(requestProperties, (statusCode, payload) => {
             statusCode = typeof statusCode === 'number' ? statusCode : 500;
