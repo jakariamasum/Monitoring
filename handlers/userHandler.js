@@ -1,5 +1,5 @@
-const data=require('../lib/data')
-const {parseJSON,hash}= require('../helpers/utilities')
+const data = require('../lib/data')
+const { parseJSON, hash } = require('../helpers/utilities')
 const handler = {};
 
 handler.userHandler = (requestProperties, callback) => {
@@ -16,7 +16,7 @@ handler._user = {};
 handler._user.get = (requestProperties, callback) => {
     const phone =
         typeof requestProperties.queryStringObject.phone === 'string' &&
-        requestProperties.queryStringObject.phone.trim().length === 11
+            requestProperties.queryStringObject.phone.trim().length === 11
             ? requestProperties.queryStringObject.phone
             : false;
     if (phone) {
@@ -103,7 +103,40 @@ handler._user.post = (requestProperties, callback) => {
     }
 };
 handler._user.put = (requestProperties, callback) => { };
-handler._user.delete = (requestProperties, callback) => { };
+handler._user.delete = (requestProperties, callback) => {
+    const phone =
+        typeof requestProperties.queryStringObject.phone === 'string' &&
+            requestProperties.queryStringObject.phone.trim().length === 11
+            ? requestProperties.queryStringObject.phone
+            : false;
+
+    if (phone) {
+        // lookup the user
+        data.read('users', phone, (err1, userData) => {
+            if (!err1 && userData) {
+                data.delete('users', phone, (err2) => {
+                    if (!err2) {
+                        callback(200, {
+                            message: 'User was successfully deleted!',
+                        });
+                    } else {
+                        callback(500, {
+                            error: 'There was a server side error!',
+                        });
+                    }
+                });
+            } else {
+                callback(500, {
+                    error: 'There was a server side error!',
+                });
+            }
+        });
+    } else {
+        callback(400, {
+            error: 'There was a problem in your request!',
+        });
+    }
+};
 
 
 module.exports = handler; 
